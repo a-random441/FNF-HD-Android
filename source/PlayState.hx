@@ -231,6 +231,8 @@ class PlayState extends MusicBeatState
 	var songLength:Float = 0;
 	var detailsText:String = "";
 	var detailsPausedText:String = "";
+	#else
+	var songLength:Float = 0; // i hate every time :)
 	#end
 
 	override public function create()
