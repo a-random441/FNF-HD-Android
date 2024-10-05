@@ -2043,6 +2043,9 @@ class PlayState extends MusicBeatState
 
 	override public function update(elapsed:Float)
 	{
+		#if mobileC
+		var DODGE = _pad.buttonA.justPressed;
+		#end
 		#if debug
 		#end
 		keyCheck();
@@ -2059,7 +2062,7 @@ class PlayState extends MusicBeatState
 		hitbox.y = lamp.y + 320;
 		}
 
-		if (FlxG.keys.justPressed.SPACE || _pad.buttonA.justPressed && boyfriend.dodgetime == 0 && (SONG.song.toLowerCase() == 'milf' || SONG.song.toLowerCase() == 'high')){
+		if (FlxG.keys.justPressed.SPACE || DODGE && boyfriend.dodgetime == 0 && (SONG.song.toLowerCase() == 'milf' || SONG.song.toLowerCase() == 'high')){
 			boyfriend.playAnim("dodge");
 			boyfriend.dodgetime = FlxG.updateFramerate;
 		}
