@@ -348,7 +348,7 @@ class ConfigMenu extends MusicBeatState
 			var ACCEPT = _pad.buttonA.justPressed;
 			var MCONTROLS = _pad.buttonC.justReleased; // don't ask why lol
 			#end
-			if (controls.UP_P #if mobileC UP_P #end)
+			if (controls.UP_P #if mobileC || UP_P #end)
 				{
 					FlxG.sound.play(Paths.sound("scrollMenu"));
 					changeItem(-1);
