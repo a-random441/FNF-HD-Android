@@ -578,7 +578,7 @@ class ConfigMenu extends MusicBeatState
 			}
 		}
 
-			if (controls.BACK #if mobileC || BACK #end)
+			if (controls.BACK #if mobileC || _pad.buttonB.justPressed #end) // workaround ig?
 			{
 				Config.write(offsetValue, accuracyType, healthValue / 10.0, healthDrainValue / 10.0, iconValue, downValue, inputValue, glowValue, randomTapValue, cutsceneValue, disableDodgeSoundValue);
 				canChangeItems = false;
