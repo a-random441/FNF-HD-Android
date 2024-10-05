@@ -1,0 +1,73 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Android
+
+# Controls when the workflow will run
+on: [workflow_dispatch, pull_request]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  buildAndroid:
+    # The type of runner that the job will run on
+    runs-on: windows-latest
+    
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout
+        uses: actions/checkout@v2.3.1
+      - name: Setup Android NDK
+        uses: nttld/setup-ndk@main
+        id: setup-ndk
+        with:
+          ndk-version: r21e
+      - name: Setup Java JDK
+        uses: actions/setup-java@main
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@main
+      - name: Configure gradle.properties
+        uses: SimonMarquis/ci-gradle-properties-action@v1
+        with:
+           path: .github/gradle.properties
+      - name: Configure build.gradle
+        uses: thecodemonkey/action-get-gradle-version@v1.0
+        with:
+          file: .github/build.gradle
+      - name: Setup Haxe
+        uses: krdlab/setup-haxe@v1
+        with:
+          haxe-version: 4.1.5
+      # Runs a set of commands using the runners shell
+      - name: Install Haxe Libraries
+        run: |
+          mkdir "%HAXELIB_ROOT%"
+          haxelib setup "%HAXELIB_ROOT%"
+          haxelib install lime 7.9.0
+          haxelib install openfl 9.1.0
+          haxelib install flixel 4.9.0
+          haxelib install flixel-addons 2.10.0
+          haxelib install flixel-ui
+          haxelib install hscript
+          haxelib git polymod https://github.com/larsiusprime/polymod.git
+          haxelib git extension-androidtools https://github.com/MAJigsaw77/extension-androidtools
+          haxelib list
+      - name: Configure Android
+        run: |
+          haxelib run lime setup -alias -y
+          haxelib run lime config ANDROID_SDK $ANDROID_HOME
+          haxelib run lime config ANDROID_NDK_ROOT $ANDROID_NDK_HOME
+          haxelib run lime config JAVA_HOME $JAVA_HOME
+          haxelib run lime config ANDROID_SETUP true
+        env:
+          ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
+      - name: Compile
+        run: haxelib run lime build android
+          
+      - uses: actions/upload-artifact@main
+        with:
+          name: androidBuild
+          path: export/release/android/bin/app/build/outputs/apk/debug
