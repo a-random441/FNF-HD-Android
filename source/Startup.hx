@@ -83,7 +83,7 @@ class Startup extends MusicBeatState
 
     function preloadMusic():Void{
         var music = [];
-        for (i in FileSystem.readDirectory(FileSystem.absolutePath("assets/songs")))
+        for (i in FileSystem.readDirectory(FileSystem.absolutePath(SUtil.getStorageDirectory() + "assets/songs")))
             {
                 music.push(i);
             }
@@ -108,7 +108,7 @@ class Startup extends MusicBeatState
 
     function preloadAtlas():Void{
     var atlasList = [];
-    for (i in FileSystem.readDirectory(FileSystem.absolutePath('assets/images/TextureAtlas')))
+    for (i in FileSystem.readDirectory(FileSystem.absolutePath(SUtil.getStorageDirectory() +'assets/images/TextureAtlas')))
         {
         atlasList.push(i);
 		trace(i);
