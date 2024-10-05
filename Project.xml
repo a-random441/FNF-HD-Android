@@ -28,8 +28,8 @@
 	<window if="desktop" orientation="landscape" fullscreen="false" resizable="true" vsync="false"/>
 
 	<!--Mobile-specific-->
-	<window if="mobile" orientation="landscape" fullscreen="true" width="0" height="0" resizable="false"/>
-
+	<window if="mobile" orientation="landscape" fullscreen="true" resizable="false" allow-shaders="true" require-shaders="true" allow-high-dpi="true" />
+	
 	<!--Switch-specific-->
 	<window if="switch" orientation="landscape" fullscreen="true" width="0" height="0" resizable="true" />
 
@@ -47,6 +47,8 @@
 	<!-- <define name="PRELOAD_ALL" /> -->
 	<define name="PRELOAD_ALL" unless="web" />
 	<define name="NO_PRELOAD_ALL" unless="PRELOAD_ALL"/>
+
+	<define name="mobileC" if="mobile" />
 	
 	<section if="PRELOAD_ALL">
 		<library name="songs"    preload="true" />
@@ -111,6 +113,7 @@
 		NOT USING A DIRECT THING TO THE ASSET!!!
 	-->
 	<assets path="assets/fonts" embed='true'/>
+	<assets path="mobile" rename="assets/mobile" if="mobileC" />
 	<!-- _______________________________ Libraries ______________________________ -->
 
 	<haxelib name="flixel" />
@@ -126,6 +129,7 @@
 	<haxelib name="faxe" if='switch'/>
 	<haxelib name="polymod"/>
 	<haxelib name="discord_rpc" if="desktop"/>
+	<haxelib name="extension-androidtools" if="android" />
 	<!-- <haxelib name="hxcpp-debug-server" if="desktop"/> -->
 
 	<!-- <haxelib name="markdown" /> -->
@@ -166,6 +170,18 @@
 	<!--Enable this for Nape release builds for a serious peformance improvement-->
 	<haxedef name="NAPE_RELEASE_BUILD" unless="debug" />
 	<haxedef name="HXCPP_GC_GENERATIONAL"/>
+
+	<!--Always enable Null Object Reference check-->
+	<haxedef name="HXCPP_CHECK_POINTER" />
+	<haxedef name="HXCPP_STACK_LINE" />
+	<haxedef name="HXCPP_STACK_TRACE" />
+
+	<section if="android">
+		<config>
+			<!--Gradle-->
+			<android gradle-version="7.4.2" gradle-plugin="7.3.1" /> <!-- ENABLE THIS IF YOU HAVE ISSUES AT COMPILE -->
+                </config>
+	</section>
 
 	<!-- _________________________________ Custom _______________________________ -->
 
