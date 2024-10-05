@@ -59,7 +59,7 @@ class Hitbox extends FlxSpriteGroup
 
     public function createhitbox(X:Float, framestring:String) {
         var button = new FlxButton(X, 0);
-        var frames = FlxAtlasFrames.fromSparrow('mobile/hitbox/hitbox.png', 'mobile/hitbox/hitbox.xml');
+        var frames = FlxAtlasFrames.fromSparrow('assets/shared/images/hitbox/hitbox.png', 'assets/shared/images/hitbox/hitbox.xml');
         
 
         button.loadGraphic(FlxGraphic.fromFrame(frames.getByName(framestring)));
