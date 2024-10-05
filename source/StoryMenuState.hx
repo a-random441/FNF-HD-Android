@@ -16,6 +16,9 @@ import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import flixel.system.FlxSound;
 import lime.net.curl.CURLCode;
+#if mobileC
+import ui.FlxVirtualPad;
+#end
 
 using StringTools;
 
@@ -77,6 +80,7 @@ class StoryMenuState extends MusicBeatState
 	var sprDifficulty:FlxSprite;
 	var leftArrow:FlxSprite;
 	var rightArrow:FlxSprite;
+	#if mobileC var _pad:FlxVirtualPad; #end
 	var debug:Bool = false;
 	override function create()
 	{
@@ -226,6 +230,12 @@ class StoryMenuState extends MusicBeatState
 
 		updateText();
 
+		#if mobileC
+		_pad = new FlxVirtualPad(FULL, A_B);
+    	        _pad.alpha = 0.75;
+    	        this.add(_pad);
+		#end
+
 		trace("Line 165");
 
 		super.create();
@@ -250,43 +260,54 @@ class StoryMenuState extends MusicBeatState
 			lock.y = grpWeekText.members[lock.ID].y;
 		});
 
+		#if mobileC
+		var UP_P = _pad.buttonUp.justPressed;
+		var DOWN_P = _pad.buttonDown.justPressed;
+		var RIGHT = _pad.buttonRight.pressed;
+		var LEFT = _pad.buttonLeft.pressed;
+		var BACK = _pad.buttonB.justPressed #if android || FlxG.android.justReleased.BACK #end;
+	        var ACCEPT = _pad.buttonA.justPressed;
+		var RIGHT_P = _pad.buttonRight.justPressed;
+		var LEFT_P = _pad.buttonLeft.justPressed;
+		#end
+
 		if (!movedBack)
 		{
 			if (!selectedWeek)
 			{
-				if (controls.UP_P)
+				if (controls.UP_P #if mobileC || UP_P #end)
 				{
 					changeWeek(-1);
 				}
 
-				if (controls.DOWN_P)
+				if (controls.DOWN_P #if mobileC || DOWN_P #end)
 				{
 					changeWeek(1);
 				}
 
-				if (controls.RIGHT)
+				if (controls.RIGHT #if mobileC || RIGHT #end)
 					rightArrow.animation.play('press')
 				else
 					rightArrow.animation.play('idle');
 
-				if (controls.LEFT)
+				if (controls.LEFT #if mobileC || LEFT #end)
 					leftArrow.animation.play('press');
 				else
 					leftArrow.animation.play('idle');
 
-				if (controls.RIGHT_P)
+				if (controls.RIGHT_P #if mobileC || RIGHT_P #end)
 					changeDifficulty(1);
-				if (controls.LEFT_P)
+				if (controls.LEFT_P #if mobileC || LEFT_P #end)
 					changeDifficulty(-1);
 			}
 
-			if (controls.ACCEPT)
+			if (controls.ACCEPT #if mobileC || ACCEPT #end)
 			{
 				selectWeek();
 			}
 		}
 
-		if (controls.BACK && !movedBack && !selectedWeek)
+		if (controls.BACK #if mobileC || BACK #end && !movedBack && !selectedWeek)
 		{
 			FlxG.sound.play(Paths.sound('cancelMenu'));
 			movedBack = true;
