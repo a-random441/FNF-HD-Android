@@ -43,7 +43,7 @@ import flixel.util.FlxSort;
 import flixel.util.FlxTimer;
 #if mobileC
 import mobilecontrols.Mobilecontrols;
-import ui.FlxVirtualPad; // used for milf lol!!!!
+//import ui.FlxVirtualPad; // used for milf lol!!!!
 #end
 
 using StringTools;
@@ -243,7 +243,7 @@ class PlayState extends MusicBeatState
 
 	#if mobileC
 	var mcontrols:Mobilecontrols; 
-	var _pad:FlxVirtualPad;
+	//var _pad:FlxVirtualPad;
 	#end
 
 	override public function create()
@@ -307,11 +307,11 @@ class PlayState extends MusicBeatState
 			if(FileSystem.exists(SUtil.getStorageDirectory() + "assets/data/" + SONG.song.toLowerCase() + "/dialogueEnd.txt"))
 			#end
 
-        if (curSong == 'Milf'){
+       /* if (curSong == 'Milf'){
 		    _pad = new FlxVirtualPad(NONE, A);
     	    _pad.alpha = 0.75;
     	    this.add(_pad);
-		}
+		}*/
 		
 
 		#if desktop
@@ -2043,9 +2043,9 @@ class PlayState extends MusicBeatState
 
 	override public function update(elapsed:Float)
 	{
-		#if mobileC
-		var DODGE = _pad.buttonA.justPressed;
-		#end
+		//#if mobileC
+		//var DODGE = _pad.buttonA.justPressed;
+		//#end
 		#if debug
 		#end
 		keyCheck();
@@ -2062,7 +2062,7 @@ class PlayState extends MusicBeatState
 		hitbox.y = lamp.y + 320;
 		}
 
-		if (FlxG.keys.justPressed.SPACE || DODGE && boyfriend.dodgetime == 0 && (SONG.song.toLowerCase() == 'milf' || SONG.song.toLowerCase() == 'high')){
+		if (FlxG.keys.justPressed.SPACE && boyfriend.dodgetime == 0 && (SONG.song.toLowerCase() == 'milf' || SONG.song.toLowerCase() == 'high')){
 			boyfriend.playAnim("dodge");
 			boyfriend.dodgetime = FlxG.updateFramerate;
 		}
