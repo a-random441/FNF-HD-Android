@@ -15,12 +15,19 @@ import lime.app.Application;
 import lime.utils.Assets;
 import flixel.math.FlxMath;
 import flixel.text.FlxText;
+#if mobileC
+import ui.FlxVirtualPad;
+import options.CustomControlsState;
+#end
 
 using StringTools;
 
 class ConfigMenu extends MusicBeatState
 {
 
+	#if mobileC
+	var _pad:FlxVirtualPad;
+	#end
 	public static var startSong:Bool = true;
 
 	var configText:FlxText;
@@ -126,6 +133,12 @@ class ConfigMenu extends MusicBeatState
 
 		add(configText);
 		add(descText);
+
+		#if mobileC
+		_pad = new FlxVirtualPad(FULL, A_B_C);
+		_pad.alpha = 0.75;
+		this.add(_pad);
+		#end
 
 		super.create();
 	}
@@ -324,33 +337,50 @@ class ConfigMenu extends MusicBeatState
 		}
 
 		if(canChangeItems){
-			if (controls.UP_P)
+			#if mobileC
+			var UP_P = _pad.buttonUp.justPressed;
+			var DOWN_P = _pad.buttonDown.justPressed;
+			var RIGHT_P = _pad.buttonRight.justPressed;
+			var LEFT_P = _pad.buttonLeft.justPressed;
+			var RIGHT = _pad.buttonRight.pressed;
+			var LEFT = _pad.buttonLeft.pressed;
+			var BACK = _pad.buttonB.justPressed #if android || FlxG.android.justReleased.BACK #end;
+			var ACCEPT = _pad.buttonA.justPressed;
+			var MCONTROLS = _pad.buttonC.justReleased; // don't ask why lol
+			#end
+			if (controls.UP_P #if mobileC UP_P #end)
 				{
 					FlxG.sound.play(Paths.sound("scrollMenu"));
 					changeItem(-1);
 				}
 
-				if (controls.DOWN_P)
+				if (controls.DOWN_P #if mobileC DOWN_P #end)
 				{
 					FlxG.sound.play(Paths.sound("scrollMenu"));
 					changeItem(1);
 				}
+	                        #if mobileC
+				if (MCONTROLS)
+				{
+					FlxG.switchState(new CustomControlsState());
+				}
+	                        #end
 				
 				switch(configSelected){
 					case 0: //Offset
-						if (controls.RIGHT_P)
+						if (controls.RIGHT_P #if mobileC || RIGHT_P #end)
 						{
 							FlxG.sound.play(Paths.sound("scrollMenu"));
 							offsetValue += 1;
 						}
 						
-						if (controls.LEFT_P)
+						if (controls.LEFT_P #if mobileC || LEFT_P #end)
 						{
 							FlxG.sound.play(Paths.sound("scrollMenu"));
 							offsetValue -= 1;
 						}
 						
-						if (controls.RIGHT)
+						if (controls.RIGHT #if mobileC || RIGHT #end)
 						{
 							leftRightCount++;
 							
@@ -359,7 +389,7 @@ class ConfigMenu extends MusicBeatState
 							}
 						}
 						
-						if (controls.LEFT)
+						if (controls.LEFT #if mobileC || LEFT #end)
 						{
 							leftRightCount++;
 							
@@ -368,12 +398,12 @@ class ConfigMenu extends MusicBeatState
 							}
 						}
 						
-						if(!controls.RIGHT && !controls.LEFT)
+						if(!controls.RIGHT #if mobileC || !RIGHT #end && !controls.LEFT #if mobileC || !LEFT #end)
 						{
 							leftRightCount = 0;
 						}
 
-						if(FlxG.keys.justPressed.ENTER){
+						if(FlxG.keys.justPressed.ENTER #if mobileC || ACCEPT #end){
 							FlxG.sound.music.fadeOut(0.3);
 							Config.write(offsetValue, accuracyType, healthValue / 10.0, healthDrainValue / 10.0, iconValue, downValue, inputValue, glowValue, randomTapValue, cutsceneValue, disableDodgeSoundValue);
 							AutoOffsetState.forceEasterEgg = FlxG.keys.pressed.SHIFT ? 1 : (FlxG.keys.pressed.CONTROL ? -1 : 0);
@@ -381,13 +411,13 @@ class ConfigMenu extends MusicBeatState
 						}
 						
 					case 1: //Accuracy
-						if (controls.RIGHT_P)
+						if (controls.RIGHT_P #if mobileC || RIGHT_P #end)
 							{
 								FlxG.sound.play(Paths.sound("scrollMenu"));
 								accuracyTypeInt += 1;
 							}
 							
-							if (controls.LEFT_P)
+							if (controls.LEFT_P #if mobileC || LEFT_P #end)
 							{
 								FlxG.sound.play(Paths.sound("scrollMenu"));
 								accuracyTypeInt -= 1;
@@ -402,13 +432,13 @@ class ConfigMenu extends MusicBeatState
 							accuracyType = accuracyTypes[accuracyTypeInt];
 							
 					case 2: //Health Multiplier
-						if (controls.RIGHT_P)
+						if (controls.RIGHT_P #if mobileC || RIGHT_P #end)
 							{
 								FlxG.sound.play(Paths.sound("scrollMenu"));
 								healthValue += 1;
 							}
 							
-							if (controls.LEFT_P)
+							if (controls.LEFT_P #if mobileC || LEFT_P #end)
 							{
 								FlxG.sound.play(Paths.sound("scrollMenu"));
 								healthValue -= 1;
@@ -419,7 +449,7 @@ class ConfigMenu extends MusicBeatState
 							if (healthValue < 0)
 								healthValue = 50;
 								
-						if (controls.RIGHT)
+						if (controls.RIGHT #if mobileC || RIGHT #end)
 						{
 							leftRightCount++;
 							
@@ -428,7 +458,7 @@ class ConfigMenu extends MusicBeatState
 							}
 						}
 						
-						if (controls.LEFT)
+						if (controls.LEFT #if mobileC || LEFT #end)
 						{
 							leftRightCount++;
 							
@@ -437,24 +467,24 @@ class ConfigMenu extends MusicBeatState
 							}
 						}
 						
-						if(!controls.RIGHT && !controls.LEFT)
+						if(!controls.RIGHT #if mobileC || !RIGHT #end && !controls.LEFT #if mobileC || !LEFT #end)
 						{
 							leftRightCount = 0;
 						}
 						
-						if(!controls.RIGHT && !controls.LEFT)
+						if(!controls.RIGHT #if mobileC || !RIGHT #end && !controls.LEFT #if mobileC || !LEFT #end)
 						{
 							leftRightCount = 0;
 						}
 								
 					case 3: //Health Drain Multiplier
-						if (controls.RIGHT_P)
+						if (controls.RIGHT_P #if mobileC || RIGHT_P #end)
 							{
 								FlxG.sound.play(Paths.sound("scrollMenu"));
 								healthDrainValue += 1;
 							}
 							
-							if (controls.LEFT_P)
+							if (controls.LEFT_P #if mobileC || LEFT_P #end)
 							{
 								FlxG.sound.play(Paths.sound("scrollMenu"));
 								healthDrainValue -= 1;
@@ -465,7 +495,7 @@ class ConfigMenu extends MusicBeatState
 							if (healthDrainValue < 0)
 								healthDrainValue = 100;
 								
-						if (controls.RIGHT)
+						if (controls.RIGHT #if mobileC || RIGHT #end)
 						{
 							leftRightCount++;
 							
@@ -474,7 +504,7 @@ class ConfigMenu extends MusicBeatState
 							}
 						}
 						
-						if (controls.LEFT)
+						if (controls.LEFT #if mobileC || LEFT #end)
 						{
 							leftRightCount++;
 							
@@ -483,43 +513,43 @@ class ConfigMenu extends MusicBeatState
 							}
 						}
 						
-						if(!controls.RIGHT && !controls.LEFT)
+						if(!controls.RIGHT #if mobileC || !RIGHT #end && !controls.LEFT #if mobileC || !LEFT #end)
 						{
 							leftRightCount = 0;
 						}
 					case 4: //Heads
-						if (controls.RIGHT_P || controls.LEFT_P) {
+						if (controls.RIGHT_P || controls.LEFT_P #if mobileC || RIGHT_P || LEFT_P #end) {
 							FlxG.sound.play(Paths.sound("scrollMenu"));
 							iconValue = !iconValue;
 						}
 					case 5: //Downscroll
-						if (controls.RIGHT_P || controls.LEFT_P) {
+						if (controls.RIGHT_P || controls.LEFT_P #if mobileC || RIGHT_P || LEFT_P #end) {
 							FlxG.sound.play(Paths.sound("scrollMenu"));
 							downValue = !downValue;
 						}
 					case 6: //Miss Stun
-						if (controls.RIGHT_P || controls.LEFT_P) {
+						if (controls.RIGHT_P || controls.LEFT_P #if mobileC || RIGHT_P || LEFT_P #end) {
 							FlxG.sound.play(Paths.sound("scrollMenu"));
 							inputValue = !inputValue;
 						}
 					case 7: //Note Glow
-						if (controls.RIGHT_P || controls.LEFT_P) {
+						if (controls.RIGHT_P || controls.LEFT_P #if mobileC || RIGHT_P || LEFT_P #end) {
 							FlxG.sound.play(Paths.sound("scrollMenu"));
 							glowValue = !glowValue;
 						}
 					case 8: //Random Tap 
-						if (controls.RIGHT_P || controls.LEFT_P) {
+						if (controls.RIGHT_P || controls.LEFT_P #if mobileC || RIGHT_P || LEFT_P #end) {
 							FlxG.sound.play(Paths.sound("scrollMenu"));
 							randomTapValue = !randomTapValue;
 						}
 					case 9: //Cutscene shit
-						if (controls.RIGHT_P)
+						if (controls.RIGHT_P #if mobileC || RIGHT_P #end)
 						{
 							FlxG.sound.play(Paths.sound("scrollMenu"));
 							cutsceneTypeInt += 1;
 						}
 							
-						if (controls.LEFT_P)
+						if (controls.LEFT_P #if mobileC || LEFT_P #end)
 						{
 							FlxG.sound.play(Paths.sound("scrollMenu"));
 							cutsceneTypeInt -= 1;
@@ -532,13 +562,13 @@ class ConfigMenu extends MusicBeatState
 							cutsceneTypeInt = 2;
 						cutsceneValue = cutsceneTypes[cutsceneTypeInt];
 					case 10: //Disable High Sound
-					if (controls.RIGHT_P || controls.LEFT_P) {
+					if (controls.RIGHT_P || controls.LEFT_P #if mobileC || RIGHT_P || LEFT_P #end) {
 						FlxG.sound.play(Paths.sound("scrollMenu"));
 						disableDodgeSoundValue = !disableDodgeSoundValue;
 					}
 
 					case 11: //Binds
-						if (FlxG.keys.justPressed.ENTER) {
+						if (FlxG.keys.justPressed.ENTER #if mobileC || ACCEPT #end) {
 							canChangeItems = false;
 							FlxG.sound.play(Paths.sound("scrollMenu"));
 							Config.write(offsetValue, accuracyType, healthValue / 10.0, healthDrainValue / 10.0, iconValue, downValue, inputValue, glowValue, randomTapValue, cutsceneValue, disableDodgeSoundValue);
@@ -548,7 +578,7 @@ class ConfigMenu extends MusicBeatState
 			}
 		}
 
-			if (controls.BACK)
+			if (controls.BACK #if mobileC || BACK #end)
 			{
 				Config.write(offsetValue, accuracyType, healthValue / 10.0, healthDrainValue / 10.0, iconValue, downValue, inputValue, glowValue, randomTapValue, cutsceneValue, disableDodgeSoundValue);
 				canChangeItems = false;
