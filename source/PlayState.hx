@@ -14,8 +14,10 @@ import Discord.DiscordClient;
 import Section.SwagSection;
 import Song.SwagSong;
 import flixel.util.FlxAxes;
+#if sys
 import sys.FileSystem;
 import sys.io.File;
+#end
 
 import flixel.FlxCamera;
 import flixel.FlxG;
@@ -286,20 +288,22 @@ class PlayState extends MusicBeatState
 		Conductor.mapBPMChanges(SONG);
 		Conductor.changeBPM(SONG.bpm);
 	
+	        #if sys
 			//if(dialogueList.contains(SONG.song.toLowerCase())){
-			if(FileSystem.exists("assets/data/" + SONG.song.toLowerCase() + "/dialogue.txt")){
+			if(FileSystem.exists(SUtil.getStorageDirectory() + "assets/data/" + SONG.song.toLowerCase() + "/dialogue.txt")){
 				dialogue = CoolUtil.coolTextFile("assets/data/" + SONG.song.toLowerCase() + "/dialogue.txt");
 				usesDialogue = true;
 			}
 
 			//if(dialogueEndList.contains(SONG.song.toLowerCase())){
-			if(FileSystem.exists("assets/data/" + SONG.song.toLowerCase() + "/dialogueEnd.txt")){//why use lists when u can just check : P
+			if(FileSystem.exists(SUtil.getStorageDirectory() + "assets/data/" + SONG.song.toLowerCase() + "/dialogueEnd.txt")){//why use lists when u can just check : P
 				dialogueEnd = CoolUtil.coolTextFile("assets/data/" + SONG.song.toLowerCase() + "/dialogueEnd.txt");
 				usesEndDialogue = true;
 			}
 			
 			
-			if(FileSystem.exists("assets/data/" + SONG.song.toLowerCase() + "/dialogueEnd.txt"))
+			if(FileSystem.exists(SUtil.getStorageDirectory() + "assets/data/" + SONG.song.toLowerCase() + "/dialogueEnd.txt"))
+			#end
 		
 
 		#if desktop
@@ -2148,7 +2152,7 @@ class PlayState extends MusicBeatState
 				scoreTxt.text = "Score:" + songScore + " | Misses:" + misses + " | Accuracy:" + truncateFloat(accuracy, 2) + "%";
 		}
 
-		if (FlxG.keys.justPressed.ENTER && startedCountdown && canPause)
+		if (FlxG.keys.justPressed.ENTER #if android || FlxG.android.justReleased.BACK #end && startedCountdown && canPause)
 		{
 			persistentUpdate = false;
 			persistentDraw = true;
