@@ -41,6 +41,13 @@
 
 	<classpath name="source" />
 
+	<classpath name="source/options" />
+	<classpath name="source/ui" />
+
+	<assets path="assets" include="*.txt"/>
+
+	<assets path="assets/shared/images/hitbox"/>
+
 	<assets path="assets/preload" rename="assets" exclude="*.ogg" if="web"/>
 	<assets path="assets/preload" rename="assets" exclude="*.mp3" unless="web"/>
 	
