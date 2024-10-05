@@ -354,7 +354,7 @@ class ConfigMenu extends MusicBeatState
 					changeItem(-1);
 				}
 
-				if (controls.DOWN_P #if mobileC DOWN_P #end)
+				if (controls.DOWN_P #if mobileC || DOWN_P #end)
 				{
 					FlxG.sound.play(Paths.sound("scrollMenu"));
 					changeItem(1);
