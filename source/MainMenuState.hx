@@ -187,7 +187,7 @@ class MainMenuState extends MusicBeatState
 				FlxG.switchState(new TitleState());
 			}
 
-			if (controls.ACCEPT #if mobileC || ACCEPT)
+			if (controls.ACCEPT #if mobileC || ACCEPT #end)
 			{
 				if (optionShit[curSelected] == 'donate')
 				{
