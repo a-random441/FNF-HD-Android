@@ -13,15 +13,22 @@ import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
+#if mobileC
+import ui.FlxVirtualPad;
+#end
 
 class PauseSubState extends MusicBeatSubstate
 {
 	var grpMenuShit:FlxTypedGroup<Alphabet>;
 
-	var menuItems:Array<String> = ['Resume', 'Restart Song', 'Options', 'Exit to menu'];
+	var menuItems:Array<String> = ['Resume', 'Restart Song', #if mobileC 'Debug Menu', #end 'Options', 'Exit to menu'];
 	var curSelected:Int = 0;
 
 	var pauseMusic:FlxSound;
+
+	#if mobileC
+	var _pad:FlxVirtualPad;
+	#end
 
 	public function new(x:Float, y:Float)
 	{
@@ -77,6 +84,13 @@ class PauseSubState extends MusicBeatSubstate
 		changeSelection();
 
 		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
+
+                #if mobileC
+		_pad = new FlxVirtualPad(UP_DOWN, A);
+    	        _pad.alpha = 0.75;
+    	        this.add(_pad);
+		_pad.cameras = cameras;
+                #end
 	}
 
 	override function update(elapsed:Float)
@@ -86,9 +100,15 @@ class PauseSubState extends MusicBeatSubstate
 
 		super.update(elapsed);
 
-		var upP = controls.UP_P;
-		var downP = controls.DOWN_P;
-		var accepted = controls.ACCEPT;
+		var upP = controls.UP_P #if mobileC || _pad.buttonUp.justPressed #end;
+		var downP = controls.DOWN_P #if mobileC || _pad.buttonDown.justPressed #end;
+		var accepted = controls.ACCEPT #if mobileC || _pad.buttonA.justPressed #end;
+
+		#if android
+		if (FlxG.android.justReleased.BACK == true){
+			close();
+		}
+		#end
 
 		if (upP)
 		{
@@ -112,6 +132,8 @@ class PauseSubState extends MusicBeatSubstate
 					
 				case "Restart Song":
 					FlxG.resetState();
+				case "Debug Menu"
+					FlxG.switchState(new ChartingState());
 				case "Options":
 					FlxG.switchState(new ConfigMenu());
 					ConfigMenu.ingame = true;
