@@ -14,7 +14,7 @@ class Mobilecontrols extends FlxSpriteGroup
     public var hitboxisenabled:Bool = false;
 	public var keyboardisenabled:Bool = false;
 
-	public var downscroll_isenabled:Bool = false;
+	// public var downscroll_isenabled:Bool = false;
 
     var _pad:FlxVirtualPad;
 	var _hitbox:Hitbox;
@@ -49,7 +49,7 @@ class Mobilecontrols extends FlxSpriteGroup
     {
         super();
 
-		downscroll_isenabled = config.getdownscroll();
+		//downscroll_isenabled = config.getdownscroll();
 
 		// load control mode num from Config.hx
 		controlmode = config.getcontrolmode();
