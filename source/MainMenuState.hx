@@ -18,6 +18,9 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import io.newgrounds.NG;
 import lime.app.Application;
+#if mobileC
+import ui.FlxVirtualPad;
+#end
 
 using StringTools;
 
@@ -36,6 +39,10 @@ class MainMenuState extends MusicBeatState
 
 	var magenta:FlxSprite;
 	var camFollow:FlxObject;
+
+	#if mobileC
+	var _pad:FlxVirtualPad;
+	#end
 
 	override function create()
 	{
@@ -136,6 +143,12 @@ class MainMenuState extends MusicBeatState
 
 		changeItem();
 
+		#if mobileC
+		_pad = new FlxVirtualPad(UP_DOWN, A_B);
+		_pad.alpha = 0.75;
+		this.add(_pad);
+		#end
+
 		super.create();
 	}
 
@@ -150,25 +163,31 @@ class MainMenuState extends MusicBeatState
 
 		if (!selectedSomethin)
 		{
+			#if mobileC
+			var UP_P = _pad.buttonUp.justPressed;
+			var DOWN_P = _pad.buttonDown.justPressed;
+			var BACK = _pad.buttonB.justPressed #if android || FlxG.android.justReleased.BACK #end;
+			var ACCEPT = _pad.buttonA.justPressed;
+			#end
 
-			if (controls.UP_P)
+			if (controls.UP_P #if mobileC || UP_P #end)
 			{
 				FlxG.sound.play(Paths.sound('scrollMenu'));
 				changeItem(-1);
 			}
 
-			if (controls.DOWN_P)
+			if (controls.DOWN_P #if mobileC || DOWN_P #end)
 			{
 				FlxG.sound.play(Paths.sound('scrollMenu'));
 				changeItem(1);
 			}
 
-			if (controls.BACK)
+			if (controls.BACK #if mobileC || BACK #end)
 			{
 				FlxG.switchState(new TitleState());
 			}
 
-			if (controls.ACCEPT)
+			if (controls.ACCEPT #if mobileC || ACCEPT)
 			{
 				if (optionShit[curSelected] == 'donate')
 				{
