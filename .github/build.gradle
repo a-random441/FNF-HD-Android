@@ -1,0 +1,31 @@
+apply plugin: 'com.android.library'
+
+repositories
+{
+	mavenCentral()
+	google()
+}
+
+android
+{
+	namespace 'org.haxe.extension.androidtools'
+	compileSdkVersion Integer.parseInt(project.ANDROID_BUILD_SDK_VERSION)
+	buildToolsVersion project.ANDROID_BUILD_TOOLS_VERSION
+}
+
+dependencies
+{
+	implementation project(':deps:extension-api')
+
+	implementation('androidx.core:core:1.6.0')
+	{
+		exclude group: 'org.jetbrains.kotlin'
+		exclude module: 'kotlin-stdlib'
+		exclude module: 'kotlin-stdlib-jdk7'
+		exclude module: 'kotlin-stdlib-jdk8'
+		exclude module: 'kotlinx-coroutines-core'
+		exclude module: 'kotlinx-coroutines-android'
+	}
+
+	implementation('com.google.code.gson:gson:2.11.0')
+}
