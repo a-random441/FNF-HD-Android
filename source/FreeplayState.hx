@@ -14,6 +14,9 @@ import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import flixel.tweens.FlxEase;
+#if mobileC
+import ui.FlxVirtualPad;
+#end
 
 import flixel.tweens.FlxTween;
 
@@ -52,6 +55,10 @@ class FreeplayState extends MusicBeatState
 	private var grpSongs:FlxTypedGroup<Alphabet>;
 	private var curPlaying:Bool = false;
 	private var iconArray:Array<HealthIcon> = [];
+
+	#if mobileC
+	var _pad:FlxVirtualPad;
+	#end
 
 	override function create()
 	{
@@ -190,6 +197,10 @@ class FreeplayState extends MusicBeatState
 			trace(md);
 		 */
 
+		_pad = new FlxVirtualPad(FULL, A_B);
+		_pad.alpha = 0.65;
+		this.add(_pad);
+
 		super.create();
 	}
 
@@ -245,9 +256,14 @@ class FreeplayState extends MusicBeatState
 
 		scoreText.text = "PERSONAL BEST:" + lerpScore;
 
-		var upP = controls.UP_P;
-		var downP = controls.DOWN_P;
-		var accepted = controls.ACCEPT;
+		var upP = controls.UP_P #if mobileC || _pad.buttonUp.justPressed #end;
+		var downP = controls.DOWN_P #if mobileC || _pad.buttonDown.justPressed #end;
+		var accepted = controls.ACCEPT #if mobileC || _pad.buttonA.justPressed #end;
+		#if mobileC
+		var LEFT_P = _pad.buttonLeft.justPressed;
+		var RIGHT_P = _pad.buttonRight.justPressed;
+		var BACK = _pad.buttonB.justPressed #if android || FlxG.android.justReleased.BACK #end;
+		#end
 
 		if (upP)
 		{
@@ -258,12 +274,12 @@ class FreeplayState extends MusicBeatState
 			changeSelection(1);
 		}
 
-		if (controls.LEFT_P)
+		if (controls.LEFT_P #if mobileC || LEFT_P #end)
 			changeDiff(-1);
-		if (controls.RIGHT_P)
+		if (controls.RIGHT_P #if mobileC || RIGHT_P #end)
 			changeDiff(1);
 
-		if (controls.BACK)
+		if (controls.BACK #if mobileC || BACK #end)
 		{
 			FlxG.switchState(new MainMenuState());
 		}
