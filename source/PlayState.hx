@@ -2969,44 +2969,25 @@ class PlayState extends MusicBeatState
 
 	private function keyCheck():Void{
 
-		#if mobile // gyattt
+		upTime = controls.UP ? upTime + 1 : 0;
+		downTime = controls.DOWN ? downTime + 1 : 0;
+		leftTime = controls.LEFT ? leftTime + 1 : 0;
+		rightTime = controls.RIGHT ? rightTime + 1 : 0;
 
-		var up = mcontrols.UP;
-		var right = mcontrols.RIGHT;
-		var down = mcontrols.DOWN;
-		var left = mcontrols.LEFT;
+		upPress = upTime == 1;
+		downPress = downTime == 1;
+		leftPress = leftTime == 1;
+		rightPress = rightTime == 1;
 
-		var upP = mcontrols.UP_P;
-		var rightP = mcontrols.RIGHT_P;
-		var downP = mcontrols.DOWN_P;
-		var leftP = mcontrols.LEFT_P;
+		upRelease = upHold && upTime == 0;
+		downRelease = downHold && downTime == 0;
+		leftRelease = leftHold && leftTime == 0;
+		rightRelease = rightHold && rightTime == 0;
 
-		var upR = mcontrols.UP_R;
-		var rightR = mcontrols.RIGHT_R;
-		var downR = mcontrols.DOWN_R;
-		var leftR = mcontrols.LEFT_R;
-
-		#end
-
-		upTime = controls.UP || mcontrols.UP ? upTime + 1 : 0;
-		downTime = controls.DOWN || mcontrols.DOWN ? downTime + 1 : 0;
-		leftTime = controls.LEFT || mcontrols.LEFT ? leftTime + 1 : 0;
-		rightTime = controls.RIGHT || mcontrols.RIGHT ? rightTime + 1 : 0;
-
-		upPress || upP  = upTime == 1;
-		downPress || downP = downTime == 1;
-		leftPress || leftP = leftTime == 1;
-		rightPress || rightP = rightTime == 1;
-
-		upRelease || upR = upHold && upTime == 0;
-		downRelease || downR = downHold && downTime == 0;
-		leftRelease || leftR = leftHold && leftTime == 0;
-		rightRelease || rightR = rightHold && rightTime == 0;
-
-		upHold || up = upTime > 0;
-		downHold || down = downTime > 0;
-		leftHold || left = leftTime > 0;
-		rightHold || right = rightTime > 0;
+		upHold = upTime > 0;
+		downHold = downTime > 0;
+		leftHold = leftTime > 0;
+		rightHold = rightTime > 0;
 
 		/*THE FUNNY 4AM CODE!
 		Get more sleep nigga goddamn...
@@ -3163,7 +3144,7 @@ class PlayState extends MusicBeatState
 		}
 			notes.forEachAlive(function(daNote:Note)
 			{
-					if ((upHold || rightHold || downHold || leftHold || up || right || down || left) && !boyfriend.stunned && generatedMusic)
+					if ((upHold || up || rightHold || right || downHold || down || leftHold || left) && !boyfriend.stunned && generatedMusic)
 					{
 						if (daNote.canBeHit && daNote.mustPress && daNote.isSustainNote)
 						{
@@ -3251,7 +3232,7 @@ class PlayState extends MusicBeatState
 					case 2:
 						if (upPress || upP && spr.animation.curAnim.name != 'confirm')
 							spr.animation.play('pressed');
-						if (!upHold || up)
+						if (!upHold || !up)
 							spr.animation.play('static');
 					case 3:
 						if (rightPress || rightP && spr.animation.curAnim.name != 'confirm')
