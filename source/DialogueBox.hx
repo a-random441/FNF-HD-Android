@@ -287,7 +287,7 @@ class DialogueBox extends FlxSpriteGroup
 		_pad.alpha = 0.75;
 		this.add(_pad);
 
-		super.create()
+		super.create();
 	}
 
 	var dialogueOpened:Bool = false;
