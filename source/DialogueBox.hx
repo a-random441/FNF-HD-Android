@@ -14,6 +14,7 @@ import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import openfl.display.BitmapData;
 import openfl.media.Sound;
+import ui.FlxVirtualPad;
 
 using StringTools;
 
@@ -66,6 +67,9 @@ class DialogueBox extends FlxSpriteGroup
 	var bgFade:FlxSprite;
 	var blackBG:FlxSprite;
 
+	var justTouched:Bool = false;
+
+	var _pad:FlxVirtualPad;
 
 	var canAdvance = false;
 	
@@ -277,6 +281,15 @@ class DialogueBox extends FlxSpriteGroup
 		// add(dialogue);
 	}
 
+	override function create()
+	{
+		_pad = new FlxVirtualPad(NONE, A);
+		_pad.alpha = 0.75;
+		this.add(_pad);
+
+		super.create()
+	}
+
 	var dialogueOpened:Bool = false;
 	var dialogueStarted:Bool = false;
 
@@ -313,14 +326,18 @@ class DialogueBox extends FlxSpriteGroup
 			dialogueStarted = true;
 		}
 
-		if(FlxG.keys.justPressed.SPACE && !isEnding){
+		if(FlxG.keys.justPressed.SPACE || _pad.buttonA.justPressed && !isEnding){
 
 			isEnding = true;
 			endDialogue();
 
 		}
 
-		if (FlxG.keys.justPressed.ANY && dialogueStarted == true && canAdvance && !isEnding)
+		for (touch in FlxG.touches.list)
+	                if (touch.justPressed)
+		                justTouched = true;
+
+		if (FlxG.keys.justPressed.ANY || justTouched && dialogueStarted == true && canAdvance && !isEnding)
 		{
 			remove(dialogue);
 			canAdvance = false;
