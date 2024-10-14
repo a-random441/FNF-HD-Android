@@ -68,16 +68,14 @@ class DialogueBox extends FlxSpriteGroup
 
 
 	var canAdvance = false;
+
+	var screenJustTouched:Bool = false;
 	
 	
 
 	public function new(talkingRight:Bool = true, ?dialogueList:Array<String>)
 	{
 		super();
-		
-		
-	
-
 
 		new FlxTimer().start(0.5, function(tmr:FlxTimer)
 		{
@@ -320,7 +318,16 @@ class DialogueBox extends FlxSpriteGroup
 
 		}
 
-		if (FlxG.keys.justPressed.ANY && dialogueStarted == true && canAdvance && !isEnding)
+		for (touch in FlxG.touches.list)
+		{
+			screenJustTouched = false;
+			
+			if (touch.justReleased){
+				screenJustTouched = true;
+			}
+		}
+
+		if (FlxG.keys.justPressed.ANY || screenJustTouched && dialogueStarted == true && canAdvance && !isEnding)
 		{
 			remove(dialogue);
 			canAdvance = false;
